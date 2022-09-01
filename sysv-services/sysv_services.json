@@ -1,0 +1,48 @@
+{
+    "zabbix_export": {
+        "version": "6.0",
+        "date": "2022-08-31T20:26:35Z",
+        "groups": [
+            {
+                "uuid": "7df96b18c230490a9a0a9e2307226338",
+                "name": "Templates"
+            }
+        ],
+        "templates": [
+            {
+                "uuid": "9ed89b50f77047bebe7571169787ff0c",
+                "template": "SysV Services",
+                "name": "SysV Services",
+                "groups": [
+                    {
+                        "name": "Templates"
+                    }
+                ],
+                "discovery_rules": [
+                    {
+                        "uuid": "e46758a1a9b04ec2b75150a649f8534e",
+                        "name": "SysV Service Discovery",
+                        "key": "SysV.Service.Discovery",
+                        "delay": "1d",
+                        "lifetime": "0",
+                        "item_prototypes": [
+                            {
+                                "uuid": "38ad806bac3245699ed2f5c5de6a3c7d",
+                                "name": "Service {#SERVICE} status",
+                                "key": "SysV.Service.Query.[{#SERVICE}]",
+                                "trigger_prototypes": [
+                                    {
+                                        "uuid": "1c20814c31794a42b70ac109a47110af",
+                                        "expression": "last(/SysV Services/SysV.Service.Query.[{#SERVICE}])=0",
+                                        "name": "Service {#SERVICE} status",
+                                        "priority": "HIGH"
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    }
+}

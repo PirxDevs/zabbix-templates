@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<zabbix_export>
+    <version>6.0</version>
+    <date>2022-08-31T20:26:19Z</date>
+    <groups>
+        <group>
+            <uuid>7df96b18c230490a9a0a9e2307226338</uuid>
+            <name>Templates</name>
+        </group>
+    </groups>
+    <templates>
+        <template>
+            <uuid>9ed89b50f77047bebe7571169787ff0c</uuid>
+            <template>SysV Services</template>
+            <name>SysV Services</name>
+            <groups>
+                <group>
+                    <name>Templates</name>
+                </group>
+            </groups>
+            <discovery_rules>
+                <discovery_rule>
+                    <uuid>e46758a1a9b04ec2b75150a649f8534e</uuid>
+                    <name>SysV Service Discovery</name>
+                    <key>SysV.Service.Discovery</key>
+                    <delay>1d</delay>
+                    <lifetime>0</lifetime>
+                    <item_prototypes>
+                        <item_prototype>
+                            <uuid>38ad806bac3245699ed2f5c5de6a3c7d</uuid>
+                            <name>Service {#SERVICE} status</name>
+                            <key>SysV.Service.Query.[{#SERVICE}]</key>
+                            <trigger_prototypes>
+                                <trigger_prototype>
+                                    <uuid>1c20814c31794a42b70ac109a47110af</uuid>
+                                    <expression>last(/SysV Services/SysV.Service.Query.[{#SERVICE}])=0</expression>
+                                    <name>Service {#SERVICE} status</name>
+                                    <priority>HIGH</priority>
+                                </trigger_prototype>
+                            </trigger_prototypes>
+                        </item_prototype>
+                    </item_prototypes>
+                </discovery_rule>
+            </discovery_rules>
+        </template>
+    </templates>
+</zabbix_export>

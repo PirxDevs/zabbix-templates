@@ -1,0 +1,92 @@
+#!/bin/bash
+
+# Copyright (C) 2020-2022 Pirx Developers - https://pirx.dev/
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+if test -z "${1}"; then
+  echo "Usage: ${0} <items|model|sn|reallocated|uncorrectable|pending|temperature|reallocevents|powercycles|powerhours> [<item>]"
+  exit 1
+fi
+
+if [ -x /sbin/smartctl ]; then
+  smartctlBinary="/sbin/smartctl"
+elif [ -x /usr/sbin/smartctl ]; then
+  smartctlBinary="/usr/sbin/smartctl"
+else
+  smartctlBinary=$(which smartctl 2>/dev/null)
+fi
+
+if [ -z "${smartctlBinary}" ]; then
+  echo "Error: unable to locate 'smartctl' binary"
+  exit 1
+fi
+
+if [ "${1}" = "items" ]; then
+  echo -n '{"data":['
+  cnt=0
+  for dev in $(ls -1d /sys/block/* | xargs -n 1 basename); do
+    if echo "${dev}" | grep -q -E "^(fd|scr|sr|ram|loop|md|dm\-)[0-9]"; then
+      continue
+    fi
+    sudo "${smartctlBinary}" -i /dev/${dev} 1>/dev/null 2>&1
+    if [ "$?" -ne 0 ]; then
+      continue
+    fi
+    if [ "${cnt}" -ne  0 ]; then
+      echo -n ','
+    fi
+    let cnt=cnt+1
+    echo -n '{"{#DEVICE}":"'${dev}'"}'
+  done
+  echo ']}'
+  exit 0
+fi
+
+if [ "${1}" = "model" ]; then
+  data=$(sudo "${smartctlBinary}" -i "/dev/${2}" 2>/dev/null | grep -i -E "^Device Model:" 2>/dev/null | sed -r -e "/^[Dd]evice [Mm]odel:/s/.*:\s+//" 2>/dev/null)
+  if [ -z "${data}" ]; then
+    data=$(sudo "${smartctlBinary}" -i "/dev/${2}" 2>/dev/null | grep -i -E "^Product:" 2>/dev/null | sed -r -e "/^[Pp]roduct:/s/.*:\s+//" 2>/dev/null)
+  fi
+elif [ "${1}" = "sn" ]; then
+  data=$(sudo "${smartctlBinary}" -i "/dev/${2}" 2>/dev/null | grep -i -E "^Serial Number:" 2>/dev/null | sed -r -e "/^[Ss]erial [Nn]umber:/s/.*:\s+//" 2>/dev/null)
+elif [ "${1}" = "reallocated" ]; then
+  data=$(sudo "${smartctlBinary}" -A "/dev/${2}" 2>/dev/null | grep -E "^\s*5\s+" 2>/dev/null | awk -F" " '{print $10}' 2>/dev/null)
+elif [ "${1}" = "uncorrectable" ]; then
+  data=$(sudo "${smartctlBinary}" -A "/dev/${2}" 2>/dev/null | grep -E "^\s*198\s+" 2>/dev/null | awk -F" " '{print $10}' 2>/dev/null)
+  if [ -z "${data}" ]; then
+    data=$(sudo "${smartctlBinary}" -A "/dev/${2}" 2>/dev/null | grep -i -E "^\s*187\s+.*uncorrect" 2>/dev/null | awk -F" " '{print $10}' 2>/dev/null)
+  fi
+  if [ -z "${data}" ]; then
+    data=$(sudo "${smartctlBinary}" -A "/dev/${2}" 2>/dev/null | grep -i -E "grown defect list" 2>/dev/null | sed -r -e "/[Gg]rown [Dd]efect [Ll]ist:/s/.*:\s+//" 2>/dev/null)
+  fi
+elif [ "${1}" = "pending" ]; then
+  data=$(sudo "${smartctlBinary}" -A "/dev/${2}" 2>/dev/null | grep -E "^\s*197\s+" 2>/dev/null | awk -F" " '{print $10}' 2>/dev/null)
+elif [ "${1}" = "temperature" ]; then
+  data=$(sudo "${smartctlBinary}" -A "/dev/${2}" 2>/dev/null | grep -E "^\s*194\s+" 2>/dev/null | awk -F" " '{print $10}' 2>/dev/null)
+  if [ -z "${data}" ]; then
+    data=$(sudo "${smartctlBinary}" -A "/dev/${2}" 2>/dev/null | grep -i -E "current.*temperature" 2>/dev/null | sed -r -e "/[Cc]urrent.*[Tt]emperature:/s/.*:\s+([0-9]+).*/\1/" 2>/dev/null)
+  fi
+elif [ "${1}" = "reallocevents" ]; then
+  data=$(sudo "${smartctlBinary}" -A "/dev/${2}" 2>/dev/null | grep -E "^\s*196\s+" 2>/dev/null | awk -F" " '{print $10}' 2>/dev/null)
+elif [ "${1}" = "powercycles" ]; then
+  data=$(sudo "${smartctlBinary}" -A "/dev/${2}" 2>/dev/null | grep -E "^\s*12\s+" 2>/dev/null | awk -F" " '{print $10}' 2>/dev/null)
+  if [ -z "${data}" ]; then
+    data=$(sudo "${smartctlBinary}" -A "/dev/${2}" 2>/dev/null | grep -i -E "start-stop cycles" 2>/dev/null | sed -r -e "/start-stop cycles:/s/.*:\s+//" 2>/dev/null)
+  fi
+elif [ "${1}" = "powerhours" ]; then
+  data=$(sudo "${smartctlBinary}" -A "/dev/${2}" 2>/dev/null | grep -E "^\s*9\s+" 2>/dev/null | awk -F" " '{print $10}' 2>/dev/null)
+fi
+if ! [ -z "${data}" ]; then
+  echo "${data}"
+fi  

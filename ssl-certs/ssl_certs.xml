@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<zabbix_export>
+    <version>6.0</version>
+    <date>2022-09-01T17:04:22Z</date>
+    <groups>
+        <group>
+            <uuid>a571c0d144b14fd4a87a9d9b2aa9fcd6</uuid>
+            <name>Templates/Applications</name>
+        </group>
+    </groups>
+    <templates>
+        <template>
+            <uuid>c51c9e457abd4942984fe73d64485839</uuid>
+            <template>SSL Certificate Checks</template>
+            <name>SSL Certificate Checks</name>
+            <groups>
+                <group>
+                    <name>Templates/Applications</name>
+                </group>
+            </groups>
+            <discovery_rules>
+                <discovery_rule>
+                    <uuid>b3c64a71be4341deb89cde3c4345704a</uuid>
+                    <name>SSL Certficates</name>
+                    <key>SSL.Certificate.Discovery</key>
+                    <delay>1d</delay>
+                    <lifetime>0</lifetime>
+                    <item_prototypes>
+                        <item_prototype>
+                            <uuid>aa34589c11f74987a7fe3d24946b57f6</uuid>
+                            <name>SSL certificate expiration for {#DOMAIN} on {#HOST}:{#PORT}</name>
+                            <key>SSL.Certificate.Expire.[{#HOST},{#PORT},{#DOMAIN},{#TIMEOUT}]</key>
+                            <delay>6h</delay>
+                            <value_type>FLOAT</value_type>
+                            <units>Days</units>
+                            <trigger_prototypes>
+                                <trigger_prototype>
+                                    <uuid>88d76dfa28974a8884ee113dd71c5889</uuid>
+                                    <expression>last(/SSL Certificate Checks/SSL.Certificate.Expire.[{#HOST},{#PORT},{#DOMAIN},{#TIMEOUT}])=-65535</expression>
+                                    <name>Error while checking SSL Certificate for {#DOMAIN} on {#HOST}:{#PORT}</name>
+                                    <priority>DISASTER</priority>
+                                </trigger_prototype>
+                                <trigger_prototype>
+                                    <uuid>ae8d1796ad514c78bf242784fd5fb1b7</uuid>
+                                    <expression>last(/SSL Certificate Checks/SSL.Certificate.Expire.[{#HOST},{#PORT},{#DOMAIN},{#TIMEOUT}])=1</expression>
+                                    <recovery_mode>RECOVERY_EXPRESSION</recovery_mode>
+                                    <recovery_expression>last(/SSL Certificate Checks/SSL.Certificate.Expire.[{#HOST},{#PORT},{#DOMAIN},{#TIMEOUT}])&gt;1</recovery_expression>
+                                    <name>SSL Certificate for {#DOMAIN} on {#HOST}:{#PORT} expires in 1 day</name>
+                                    <priority>HIGH</priority>
+                                </trigger_prototype>
+                                <trigger_prototype>
+                                    <uuid>f22ab370c327413bbfd1afd1e2882ed1</uuid>
+                                    <expression>last(/SSL Certificate Checks/SSL.Certificate.Expire.[{#HOST},{#PORT},{#DOMAIN},{#TIMEOUT}])=5</expression>
+                                    <recovery_mode>RECOVERY_EXPRESSION</recovery_mode>
+                                    <recovery_expression>last(/SSL Certificate Checks/SSL.Certificate.Expire.[{#HOST},{#PORT},{#DOMAIN},{#TIMEOUT}])&gt;5</recovery_expression>
+                                    <name>SSL Certificate for {#DOMAIN} on {#HOST}:{#PORT} expires in 5 days</name>
+                                    <priority>AVERAGE</priority>
+                                </trigger_prototype>
+                                <trigger_prototype>
+                                    <uuid>ec97b2938f784480b3c164cc268b49d3</uuid>
+                                    <expression>last(/SSL Certificate Checks/SSL.Certificate.Expire.[{#HOST},{#PORT},{#DOMAIN},{#TIMEOUT}])&lt;0 and last(/SSL Certificate Checks/SSL.Certificate.Expire.[{#HOST},{#PORT},{#DOMAIN},{#TIMEOUT}])&lt;&gt;-65535</expression>
+                                    <recovery_mode>RECOVERY_EXPRESSION</recovery_mode>
+                                    <recovery_expression>last(/SSL Certificate Checks/SSL.Certificate.Expire.[{#HOST},{#PORT},{#DOMAIN},{#TIMEOUT}])&gt;0</recovery_expression>
+                                    <name>SSL Certificate for {#DOMAIN} on {#HOST}:{#PORT} has expired</name>
+                                    <priority>DISASTER</priority>
+                                </trigger_prototype>
+                            </trigger_prototypes>
+                        </item_prototype>
+                        <item_prototype>
+                            <uuid>b949894d1e594f6fbde36005bf1b335c</uuid>
+                            <name>SSL certificate validity for {#DOMAIN} on {#HOST}:{#PORT}</name>
+                            <key>SSL.Certificate.Valid.[{#HOST},{#PORT},{#DOMAIN},{#TIMEOUT}]</key>
+                            <delay>6h</delay>
+                            <trigger_prototypes>
+                                <trigger_prototype>
+                                    <uuid>063a580d44244452b3905bc26755e24d</uuid>
+                                    <expression>last(/SSL Certificate Checks/SSL.Certificate.Valid.[{#HOST},{#PORT},{#DOMAIN},{#TIMEOUT}])=0</expression>
+                                    <name>SSL Certificate for {#DOMAIN} on {#HOST}:{#PORT} is invalid</name>
+                                    <priority>DISASTER</priority>
+                                </trigger_prototype>
+                            </trigger_prototypes>
+                        </item_prototype>
+                    </item_prototypes>
+                </discovery_rule>
+            </discovery_rules>
+        </template>
+    </templates>
+</zabbix_export>

@@ -1,0 +1,57 @@
+zabbix_export:
+  version: '6.0'
+  date: '2022-09-01T17:04:47Z'
+  groups:
+    -
+      uuid: a571c0d144b14fd4a87a9d9b2aa9fcd6
+      name: Templates/Applications
+  templates:
+    -
+      uuid: 1f604e912b53460fbfe93ac570372e46
+      template: 'Dehydrated SSL Certificate Checks'
+      name: 'Dehydrated SSL Certificate Checks'
+      groups:
+        -
+          name: Templates/Applications
+      discovery_rules:
+        -
+          uuid: 6f7b10d1ac0e421eac26edaeb28b8a3c
+          name: 'Dehydrated SSL Certficates'
+          key: Dehydrated.SSL.Certificate.Discovery
+          delay: 1d
+          lifetime: '0'
+          item_prototypes:
+            -
+              uuid: 06ca585dc9d5468db4292f8bab172e49
+              name: 'Dehydrated SSL certificate expiration for {#CERT}'
+              key: 'Dehydrated.SSL.Certificate.Expire.[{#CERT}]'
+              delay: 6h
+              value_type: FLOAT
+              units: Days
+              trigger_prototypes:
+                -
+                  uuid: ed68cf07547d460bad5739b0d96fba64
+                  expression: 'last(/Dehydrated SSL Certificate Checks/Dehydrated.SSL.Certificate.Expire.[{#CERT}])=1'
+                  recovery_mode: RECOVERY_EXPRESSION
+                  recovery_expression: 'last(/Dehydrated SSL Certificate Checks/Dehydrated.SSL.Certificate.Expire.[{#CERT}])>1'
+                  name: 'Dehydrated SSL Certificate for {#CERT} expires in 1 day'
+                  priority: HIGH
+                -
+                  uuid: 3d0b1787d1a04c0bad4dae9d69fb2e42
+                  expression: 'last(/Dehydrated SSL Certificate Checks/Dehydrated.SSL.Certificate.Expire.[{#CERT}])=5'
+                  recovery_mode: RECOVERY_EXPRESSION
+                  recovery_expression: 'last(/Dehydrated SSL Certificate Checks/Dehydrated.SSL.Certificate.Expire.[{#CERT}])>5'
+                  name: 'Dehydrated SSL Certificate for {#CERT} expires in 5 days'
+                  priority: AVERAGE
+                -
+                  uuid: 44101a14d83b4e16aef0e2a466ed8a85
+                  expression: 'last(/Dehydrated SSL Certificate Checks/Dehydrated.SSL.Certificate.Expire.[{#CERT}])<0 and last(/Dehydrated SSL Certificate Checks/Dehydrated.SSL.Certificate.Expire.[{#CERT}])<>-65535'
+                  recovery_mode: RECOVERY_EXPRESSION
+                  recovery_expression: 'last(/Dehydrated SSL Certificate Checks/Dehydrated.SSL.Certificate.Expire.[{#CERT}])>0'
+                  name: 'Dehydrated SSL Certificate for {#CERT} has expired'
+                  priority: DISASTER
+                -
+                  uuid: 3b0b047b1d1d4d1ab2e370ed65bb8452
+                  expression: 'last(/Dehydrated SSL Certificate Checks/Dehydrated.SSL.Certificate.Expire.[{#CERT}])=-65535'
+                  name: 'Error while checking Dehydrated SSL Certificate for {#CERT}'
+                  priority: DISASTER

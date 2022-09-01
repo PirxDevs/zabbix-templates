@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<zabbix_export>
+    <version>6.0</version>
+    <date>2022-08-31T20:27:07Z</date>
+    <groups>
+        <group>
+            <uuid>7df96b18c230490a9a0a9e2307226338</uuid>
+            <name>Templates</name>
+        </group>
+    </groups>
+    <templates>
+        <template>
+            <uuid>d9182ffe68bd4e0780b13364a4dd4675</uuid>
+            <template>MD RAID Array Monitor</template>
+            <name>MD RAID Array Monitor</name>
+            <groups>
+                <group>
+                    <name>Templates</name>
+                </group>
+            </groups>
+            <discovery_rules>
+                <discovery_rule>
+                    <uuid>93288589a9404b42af04127d5e7b18bf</uuid>
+                    <name>MD RAID Array Discovery</name>
+                    <key>MD.Discovery</key>
+                    <delay>1h</delay>
+                    <lifetime>0</lifetime>
+                    <item_prototypes>
+                        <item_prototype>
+                            <uuid>66f83608906c4d7ca5bccb8321ab0270</uuid>
+                            <name>MD RAID Array {#DEVICE} state</name>
+                            <key>MD.Query.State.[{#DEVICE}]</key>
+                            <trigger_prototypes>
+                                <trigger_prototype>
+                                    <uuid>5019b56dfdab483ab7fc1b7ffd18403d</uuid>
+                                    <expression>last(/MD RAID Array Monitor/MD.Query.State.[{#DEVICE}])=0</expression>
+                                    <name>MD RAID Array {#DEVICE} state</name>
+                                    <priority>HIGH</priority>
+                                </trigger_prototype>
+                            </trigger_prototypes>
+                        </item_prototype>
+                        <item_prototype>
+                            <uuid>2031be18b59644cba659cb2f6897eeab</uuid>
+                            <name>MD RAID Array {#DEVICE} sync status</name>
+                            <key>MD.Query.Sync.[{#DEVICE}]</key>
+                            <trigger_prototypes>
+                                <trigger_prototype>
+                                    <uuid>3418bdf83c8141729a36731f794a8360</uuid>
+                                    <expression>last(/MD RAID Array Monitor/MD.Query.Sync.[{#DEVICE}])=0</expression>
+                                    <name>MD RAID Array {#DEVICE} sync status</name>
+                                    <priority>WARNING</priority>
+                                </trigger_prototype>
+                            </trigger_prototypes>
+                        </item_prototype>
+                    </item_prototypes>
+                </discovery_rule>
+            </discovery_rules>
+        </template>
+    </templates>
+</zabbix_export>

@@ -1,0 +1,72 @@
+#!/bin/bash
+
+# Copyright (C) 2020-2022 Pirx Developers - https://pirx.dev/
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+if test -z "${1}"; then
+  echo "Usage: ${0} <items|query> [<item>]"
+  exit 1
+fi
+
+if [ -x /sbin/service ]; then
+  serviceBinary="/sbin/service"
+elif [ -x /usr/sbin/service ]; then
+  serviceBinary="/usr/sbin/service"
+else
+  serviceBinary=$(which service 2>/dev/null)
+fi
+
+if [ -z "${serviceBinary}" ]; then
+  echo "Error: unable to locate 'service' binary"
+  exit 1
+fi
+
+if [ -x /sbin/chkconfig ]; then
+  chkconfigBinary="/sbin/chkconfig"
+elif [ -x /usr/sbin/chkconfig ]; then
+  chkconfigBinary="/usr/sbin/chkconfig"
+else
+  chkconfigBinary=$(which chkconfig 2>/dev/null)
+fi
+
+if [ "${1}" = "items" ]; then
+  if ! [ -z "${chkconfigBinary}" ]; then
+    servicesList=$(/sbin/chkconfig --list 2>/dev/null | grep -E "[2345]:on" | sed -r -e 's/\s+.*//g;')
+  else
+    servicesList=$(ls -1 /etc/rc[2345].d/S* 2>/dev/null | sed -r -e 's/^.*\/S[0-9]{2}//g; /^\//d;' | sort -u)
+  fi
+  echo -n '{"data":['
+  cnt=0
+  for srv in ${servicesList}; do
+    if grep -q "^"${srv}"$" /etc/zabbix/scripts/sysv_services.excludes 1>/dev/null 2>&1; then
+      continue
+    fi
+    if [ "${cnt}" -ne 0 ]; then
+      echo -n ','
+    fi
+    let cnt=cnt+1
+    echo -n '{"{#SERVICE}":"'${srv}'"}'
+  done
+  echo ']}'
+  exit 0
+elif [ "${1}" = "query" ]; then
+  if ! grep -q "^"${2}"$" /etc/zabbix/scripts/sysv_services.excludes 1>/dev/null 2>&1; then
+    sudo "${serviceBinary}" "${2}" status 1>/dev/null 2>&1
+    if [ "$?" -eq 0 ]; then
+      echo "1"
+    else
+      echo "0"
+    fi
+  fi
+fi

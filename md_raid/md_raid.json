@@ -1,0 +1,61 @@
+{
+    "zabbix_export": {
+        "version": "6.0",
+        "date": "2022-08-31T20:27:20Z",
+        "groups": [
+            {
+                "uuid": "7df96b18c230490a9a0a9e2307226338",
+                "name": "Templates"
+            }
+        ],
+        "templates": [
+            {
+                "uuid": "d9182ffe68bd4e0780b13364a4dd4675",
+                "template": "MD RAID Array Monitor",
+                "name": "MD RAID Array Monitor",
+                "groups": [
+                    {
+                        "name": "Templates"
+                    }
+                ],
+                "discovery_rules": [
+                    {
+                        "uuid": "93288589a9404b42af04127d5e7b18bf",
+                        "name": "MD RAID Array Discovery",
+                        "key": "MD.Discovery",
+                        "delay": "1h",
+                        "lifetime": "0",
+                        "item_prototypes": [
+                            {
+                                "uuid": "66f83608906c4d7ca5bccb8321ab0270",
+                                "name": "MD RAID Array {#DEVICE} state",
+                                "key": "MD.Query.State.[{#DEVICE}]",
+                                "trigger_prototypes": [
+                                    {
+                                        "uuid": "5019b56dfdab483ab7fc1b7ffd18403d",
+                                        "expression": "last(/MD RAID Array Monitor/MD.Query.State.[{#DEVICE}])=0",
+                                        "name": "MD RAID Array {#DEVICE} state",
+                                        "priority": "HIGH"
+                                    }
+                                ]
+                            },
+                            {
+                                "uuid": "2031be18b59644cba659cb2f6897eeab",
+                                "name": "MD RAID Array {#DEVICE} sync status",
+                                "key": "MD.Query.Sync.[{#DEVICE}]",
+                                "trigger_prototypes": [
+                                    {
+                                        "uuid": "3418bdf83c8141729a36731f794a8360",
+                                        "expression": "last(/MD RAID Array Monitor/MD.Query.Sync.[{#DEVICE}])=0",
+                                        "name": "MD RAID Array {#DEVICE} sync status",
+                                        "priority": "WARNING"
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    }
+}

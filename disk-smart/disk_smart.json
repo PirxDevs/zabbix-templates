@@ -1,0 +1,119 @@
+{
+    "zabbix_export": {
+        "version": "6.0",
+        "date": "2022-08-31T20:28:03Z",
+        "groups": [
+            {
+                "uuid": "7df96b18c230490a9a0a9e2307226338",
+                "name": "Templates"
+            }
+        ],
+        "templates": [
+            {
+                "uuid": "4c8fb9578eec45a58c92349248667100",
+                "template": "DIsk S.M.A.R.T. Monitor",
+                "name": "DIsk S.M.A.R.T. Monitor",
+                "groups": [
+                    {
+                        "name": "Templates"
+                    }
+                ],
+                "discovery_rules": [
+                    {
+                        "uuid": "af65bd4ff0b646b29e5984479c64cfc0",
+                        "name": "Physical DIsk Discovery",
+                        "key": "SMART.Discovery",
+                        "delay": "1h",
+                        "lifetime": "0",
+                        "item_prototypes": [
+                            {
+                                "uuid": "ddb04ccd86bc4ae6abbdce19a8646709",
+                                "name": "Disk {#DEVICE} model",
+                                "key": "SMART.Query.Model.[{#DEVICE}]",
+                                "delay": "1d",
+                                "trends": "0",
+                                "value_type": "TEXT"
+                            },
+                            {
+                                "uuid": "10d68982e3744097a5a22d824e326a26",
+                                "name": "Disk {#DEVICE} pending sectors",
+                                "key": "SMART.Query.Pending.[{#DEVICE}]",
+                                "delay": "1h",
+                                "trigger_prototypes": [
+                                    {
+                                        "uuid": "d1e4a2a4c26648e3b9b673fd4a944f30",
+                                        "expression": "last(/DIsk S.M.A.R.T. Monitor/SMART.Query.Pending.[{#DEVICE}])>0",
+                                        "name": "Disk {#DEVICE} pending sectors",
+                                        "priority": "WARNING"
+                                    }
+                                ]
+                            },
+                            {
+                                "uuid": "6553121a35b8442381db08fb3f701b8e",
+                                "name": "Disk {#DEVICE} power-on cycles",
+                                "key": "SMART.Query.PowerCycles.[{#DEVICE}]",
+                                "delay": "1d"
+                            },
+                            {
+                                "uuid": "9d1211623781413baf97aaa397f3d34c",
+                                "name": "Disk {#DEVICE} power-on hours",
+                                "key": "SMART.Query.PowerHours.[{#DEVICE}]",
+                                "delay": "1h"
+                            },
+                            {
+                                "uuid": "d923dbf043214bd59ab6798f0af46bec",
+                                "name": "Disk {#DEVICE} reallocated sectors",
+                                "key": "SMART.Query.Reallocated.[{#DEVICE}]",
+                                "delay": "1h",
+                                "trigger_prototypes": [
+                                    {
+                                        "uuid": "600ee07e71454362809a1b22d80e8157",
+                                        "expression": "last(/DIsk S.M.A.R.T. Monitor/SMART.Query.Reallocated.[{#DEVICE}])>0",
+                                        "name": "Disk {#DEVICE} reallocated sectors",
+                                        "priority": "AVERAGE"
+                                    }
+                                ]
+                            },
+                            {
+                                "uuid": "66659a74090947e8b5484ab80c3b863a",
+                                "name": "Disk {#DEVICE} serial number",
+                                "key": "SMART.Query.SN.[{#DEVICE}]",
+                                "delay": "1d",
+                                "trends": "0",
+                                "value_type": "TEXT"
+                            },
+                            {
+                                "uuid": "84cce1e36b834bb7a2fa069c0746dfb3",
+                                "name": "Disk {#DEVICE} temperature",
+                                "key": "SMART.Query.Temperature.[{#DEVICE}]",
+                                "delay": "5m",
+                                "trigger_prototypes": [
+                                    {
+                                        "uuid": "9c4e2b253d3f401e8095159cf52ce1db",
+                                        "expression": "last(/DIsk S.M.A.R.T. Monitor/SMART.Query.Temperature.[{#DEVICE}])>50",
+                                        "name": "Disk {#DEVICE} temperature is high",
+                                        "priority": "WARNING"
+                                    }
+                                ]
+                            },
+                            {
+                                "uuid": "0cff16391c4b452692f71e20aff2f805",
+                                "name": "Disk {#DEVICE} uncorrectable sectors",
+                                "key": "SMART.Query.Uncorrectable.[{#DEVICE}]",
+                                "delay": "1h",
+                                "trigger_prototypes": [
+                                    {
+                                        "uuid": "6506d586c04c4cd28857cfb3023540a6",
+                                        "expression": "last(/DIsk S.M.A.R.T. Monitor/SMART.Query.Uncorrectable.[{#DEVICE}])>0",
+                                        "name": "Disk {#DEVICE} uncorrectable sectors",
+                                        "priority": "HIGH"
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    }
+}

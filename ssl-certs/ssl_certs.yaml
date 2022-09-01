@@ -1,0 +1,68 @@
+zabbix_export:
+  version: '6.0'
+  date: '2022-09-01T17:04:03Z'
+  groups:
+    -
+      uuid: a571c0d144b14fd4a87a9d9b2aa9fcd6
+      name: Templates/Applications
+  templates:
+    -
+      uuid: c51c9e457abd4942984fe73d64485839
+      template: 'SSL Certificate Checks'
+      name: 'SSL Certificate Checks'
+      groups:
+        -
+          name: Templates/Applications
+      discovery_rules:
+        -
+          uuid: b3c64a71be4341deb89cde3c4345704a
+          name: 'SSL Certficates'
+          key: SSL.Certificate.Discovery
+          delay: 1d
+          lifetime: '0'
+          item_prototypes:
+            -
+              uuid: aa34589c11f74987a7fe3d24946b57f6
+              name: 'SSL certificate expiration for {#DOMAIN} on {#HOST}:{#PORT}'
+              key: 'SSL.Certificate.Expire.[{#HOST},{#PORT},{#DOMAIN},{#TIMEOUT}]'
+              delay: 6h
+              value_type: FLOAT
+              units: Days
+              trigger_prototypes:
+                -
+                  uuid: 88d76dfa28974a8884ee113dd71c5889
+                  expression: 'last(/SSL Certificate Checks/SSL.Certificate.Expire.[{#HOST},{#PORT},{#DOMAIN},{#TIMEOUT}])=-65535'
+                  name: 'Error while checking SSL Certificate for {#DOMAIN} on {#HOST}:{#PORT}'
+                  priority: DISASTER
+                -
+                  uuid: ae8d1796ad514c78bf242784fd5fb1b7
+                  expression: 'last(/SSL Certificate Checks/SSL.Certificate.Expire.[{#HOST},{#PORT},{#DOMAIN},{#TIMEOUT}])=1'
+                  recovery_mode: RECOVERY_EXPRESSION
+                  recovery_expression: 'last(/SSL Certificate Checks/SSL.Certificate.Expire.[{#HOST},{#PORT},{#DOMAIN},{#TIMEOUT}])>1'
+                  name: 'SSL Certificate for {#DOMAIN} on {#HOST}:{#PORT} expires in 1 day'
+                  priority: HIGH
+                -
+                  uuid: f22ab370c327413bbfd1afd1e2882ed1
+                  expression: 'last(/SSL Certificate Checks/SSL.Certificate.Expire.[{#HOST},{#PORT},{#DOMAIN},{#TIMEOUT}])=5'
+                  recovery_mode: RECOVERY_EXPRESSION
+                  recovery_expression: 'last(/SSL Certificate Checks/SSL.Certificate.Expire.[{#HOST},{#PORT},{#DOMAIN},{#TIMEOUT}])>5'
+                  name: 'SSL Certificate for {#DOMAIN} on {#HOST}:{#PORT} expires in 5 days'
+                  priority: AVERAGE
+                -
+                  uuid: ec97b2938f784480b3c164cc268b49d3
+                  expression: 'last(/SSL Certificate Checks/SSL.Certificate.Expire.[{#HOST},{#PORT},{#DOMAIN},{#TIMEOUT}])<0 and last(/SSL Certificate Checks/SSL.Certificate.Expire.[{#HOST},{#PORT},{#DOMAIN},{#TIMEOUT}])<>-65535'
+                  recovery_mode: RECOVERY_EXPRESSION
+                  recovery_expression: 'last(/SSL Certificate Checks/SSL.Certificate.Expire.[{#HOST},{#PORT},{#DOMAIN},{#TIMEOUT}])>0'
+                  name: 'SSL Certificate for {#DOMAIN} on {#HOST}:{#PORT} has expired'
+                  priority: DISASTER
+            -
+              uuid: b949894d1e594f6fbde36005bf1b335c
+              name: 'SSL certificate validity for {#DOMAIN} on {#HOST}:{#PORT}'
+              key: 'SSL.Certificate.Valid.[{#HOST},{#PORT},{#DOMAIN},{#TIMEOUT}]'
+              delay: 6h
+              trigger_prototypes:
+                -
+                  uuid: 063a580d44244452b3905bc26755e24d
+                  expression: 'last(/SSL Certificate Checks/SSL.Certificate.Valid.[{#HOST},{#PORT},{#DOMAIN},{#TIMEOUT}])=0'
+                  name: 'SSL Certificate for {#DOMAIN} on {#HOST}:{#PORT} is invalid'
+                  priority: DISASTER

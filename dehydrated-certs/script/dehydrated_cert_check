@@ -1,0 +1,40 @@
+#!/bin/bash
+
+# Copyright (C) 2020-2022 Pirx Developers - https://pirx.dev/
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+if [ -x /bin/openssl ]; then
+  opensslBinary="/bin/openssl"
+elif [ -x /usr/bin/openssl ]; then
+  opensslBinary="/usr/bin/openssl"
+else
+  opensslBinary=$(which openssl 2>/dev/null)
+fi
+
+if [ -z "${opensslBinary}" ]; then
+  echo "Error: unable to locate 'openssl' binary"
+  exit 1
+fi
+
+if ! [ -z "${1}" ]; then
+  expire_date=$("${opensslBinary}" x509 -noout -dates -in /var/lib/dehydrated/certs/${1}/cert.pem 2>/dev/null | grep '^notAfter' 2>/dev/null | cut -d'=' -f2 2>/dev/null)
+  if ! [ -z "${expire_date}" ]; then
+    expire_date_epoch=$(date -d "${expire_date}" +%s)
+    current_date_epoch=$(date +%s)
+    days_left=$(( (expire_date_epoch - current_date_epoch)/(3600*24) ))
+    echo "${days_left}"
+  else
+    echo "-65535"
+  fi
+fi
