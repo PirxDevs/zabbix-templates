@@ -1,8 +1,6 @@
-This repository contains following templates for Zabbix:
+# Zabbix templates
 
-----------------
-dehydrated-certs
-----------------
+## dehydrated-certs
 
 Template for checking validity and expiration of SSL certificates obtained
 using dehydrated - https://dehydrated.io/
@@ -22,9 +20,7 @@ Installation:
 All certificates will be automatically discovered and will be checked for
 validity and expiration.
 
-----------
-disk-smart
-----------
+## disk-smart
 
 Template for checking S.M.A.R.T. status of physical disks
 
@@ -43,9 +39,7 @@ Installation:
 All physical disks will be automatically discovered using /sys/block/*
 entries and selected (pre-fail) S.M.A.R.T. attributes will be monitored.
 
--------
-md-raid
--------
+## md-raid
 
 Template for checking status of MD RAID arrays
 
@@ -63,9 +57,7 @@ All MD RAID arrays will be automatically discovered using /sys/block/md*
 entries and status of each array will be monitored (degraded status and
 array sync status).
 
----------
-ssl-certs
----------
+## ssl-certs
 
 Template for checking validity and expiration of SSL certificates
 
@@ -82,23 +74,23 @@ Template for checking validity and expiration of SSL certificates
    /etc/zabbix/scripts or whatever path you've set in ssl_cert_list script.
    Here is an example content of SSL service list file:
 
-   # My web server
-   my.server.com 443
-   # My FTP server over TLS
-   my.server.com 21/ftp
-   # My SMTP server over TLS
-   my.mail.server.com 25/smtp
-   # My SMTP server over SSL
-   my.mail.server.com 465
-   
+```
+# My web server
+my.server.com 443
+# My FTP server over TLS
+my.server.com 21/ftp
+# My SMTP server over TLS
+my.mail.server.com 25/smtp
+# My SMTP server over SSL
+my.mail.server.com 465
+```
+
 4. Import template into Zabbix and assign it to selected hosts.
 
 All configured services and certificates will be automatically discovered and
 will be checked for validity and expiration.
 
--------------
-sysv-services
--------------
+## sysv-services
 
 Template for checking status of system services managed by SysV init system
 
