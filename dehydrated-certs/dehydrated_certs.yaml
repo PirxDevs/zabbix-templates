@@ -1,6 +1,6 @@
 zabbix_export:
   version: '6.0'
-  date: '2022-09-01T17:04:47Z'
+  date: '2023-05-30T18:20:03Z'
   groups:
     -
       uuid: a571c0d144b14fd4a87a9d9b2aa9fcd6
@@ -31,17 +31,17 @@ zabbix_export:
               trigger_prototypes:
                 -
                   uuid: ed68cf07547d460bad5739b0d96fba64
-                  expression: 'last(/Dehydrated SSL Certificate Checks/Dehydrated.SSL.Certificate.Expire.[{#CERT}])=1'
+                  expression: 'last(/Dehydrated SSL Certificate Checks/Dehydrated.SSL.Certificate.Expire.[{#CERT}])<=5 and last(/Dehydrated SSL Certificate Checks/Dehydrated.SSL.Certificate.Expire.[{#CERT}])>0'
                   recovery_mode: RECOVERY_EXPRESSION
-                  recovery_expression: 'last(/Dehydrated SSL Certificate Checks/Dehydrated.SSL.Certificate.Expire.[{#CERT}])>1'
-                  name: 'Dehydrated SSL Certificate for {#CERT} expires in 1 day'
+                  recovery_expression: 'last(/Dehydrated SSL Certificate Checks/Dehydrated.SSL.Certificate.Expire.[{#CERT}])>5'
+                  name: 'Dehydrated SSL Certificate for {#CERT} expires in {ITEM.LASTVALUE} days'
                   priority: HIGH
                 -
                   uuid: 3d0b1787d1a04c0bad4dae9d69fb2e42
-                  expression: 'last(/Dehydrated SSL Certificate Checks/Dehydrated.SSL.Certificate.Expire.[{#CERT}])=5'
+                  expression: 'last(/Dehydrated SSL Certificate Checks/Dehydrated.SSL.Certificate.Expire.[{#CERT}])<=10'
                   recovery_mode: RECOVERY_EXPRESSION
-                  recovery_expression: 'last(/Dehydrated SSL Certificate Checks/Dehydrated.SSL.Certificate.Expire.[{#CERT}])>5'
-                  name: 'Dehydrated SSL Certificate for {#CERT} expires in 5 days'
+                  recovery_expression: 'last(/Dehydrated SSL Certificate Checks/Dehydrated.SSL.Certificate.Expire.[{#CERT}])>10'
+                  name: 'Dehydrated SSL Certificate for {#CERT} expires in {ITEM.LASTVALUE} days'
                   priority: AVERAGE
                 -
                   uuid: 44101a14d83b4e16aef0e2a466ed8a85
