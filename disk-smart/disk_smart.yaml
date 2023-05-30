@@ -1,6 +1,6 @@
 zabbix_export:
   version: '6.0'
-  date: '2022-08-31T20:27:42Z'
+  date: '2023-05-30T18:10:30Z'
   groups:
     -
       uuid: 7df96b18c230490a9a0a9e2307226338
@@ -75,7 +75,9 @@ zabbix_export:
               trigger_prototypes:
                 -
                   uuid: 9c4e2b253d3f401e8095159cf52ce1db
-                  expression: 'last(/DIsk S.M.A.R.T. Monitor/SMART.Query.Temperature.[{#DEVICE}])>50'
+                  expression: 'last(/DIsk S.M.A.R.T. Monitor/SMART.Query.Temperature.[{#DEVICE}])>=50'
+                  recovery_mode: RECOVERY_EXPRESSION
+                  recovery_expression: 'last(/DIsk S.M.A.R.T. Monitor/SMART.Query.Temperature.[{#DEVICE}])<50'
                   name: 'Disk {#DEVICE} temperature is high'
                   priority: WARNING
             -

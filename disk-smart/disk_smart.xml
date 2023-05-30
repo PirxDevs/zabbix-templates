@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <zabbix_export>
     <version>6.0</version>
-    <date>2022-08-31T20:27:53Z</date>
+    <date>2023-05-30T18:11:30Z</date>
     <groups>
         <group>
             <uuid>7df96b18c230490a9a0a9e2307226338</uuid>
@@ -90,7 +90,9 @@
                             <trigger_prototypes>
                                 <trigger_prototype>
                                     <uuid>9c4e2b253d3f401e8095159cf52ce1db</uuid>
-                                    <expression>last(/DIsk S.M.A.R.T. Monitor/SMART.Query.Temperature.[{#DEVICE}])&gt;50</expression>
+                                    <expression>last(/DIsk S.M.A.R.T. Monitor/SMART.Query.Temperature.[{#DEVICE}])&gt;=50</expression>
+                                    <recovery_mode>RECOVERY_EXPRESSION</recovery_mode>
+                                    <recovery_expression>last(/DIsk S.M.A.R.T. Monitor/SMART.Query.Temperature.[{#DEVICE}])&lt;50</recovery_expression>
                                     <name>Disk {#DEVICE} temperature is high</name>
                                     <priority>WARNING</priority>
                                 </trigger_prototype>
