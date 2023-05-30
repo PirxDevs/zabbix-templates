@@ -1,7 +1,7 @@
 {
     "zabbix_export": {
         "version": "6.0",
-        "date": "2022-08-31T20:26:35Z",
+        "date": "2023-05-30T18:13:41Z",
         "groups": [
             {
                 "uuid": "7df96b18c230490a9a0a9e2307226338",
@@ -34,6 +34,8 @@
                                     {
                                         "uuid": "1c20814c31794a42b70ac109a47110af",
                                         "expression": "last(/SysV Services/SysV.Service.Query.[{#SERVICE}])=0",
+                                        "recovery_mode": "RECOVERY_EXPRESSION",
+                                        "recovery_expression": "last(/SysV Services/SysV.Service.Query.[{#SERVICE}])=1",
                                         "name": "Service {#SERVICE} status",
                                         "priority": "HIGH"
                                     }

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <zabbix_export>
     <version>6.0</version>
-    <date>2022-08-31T20:26:19Z</date>
+    <date>2023-05-30T18:13:36Z</date>
     <groups>
         <group>
             <uuid>7df96b18c230490a9a0a9e2307226338</uuid>
@@ -34,6 +34,8 @@
                                 <trigger_prototype>
                                     <uuid>1c20814c31794a42b70ac109a47110af</uuid>
                                     <expression>last(/SysV Services/SysV.Service.Query.[{#SERVICE}])=0</expression>
+                                    <recovery_mode>RECOVERY_EXPRESSION</recovery_mode>
+                                    <recovery_expression>last(/SysV Services/SysV.Service.Query.[{#SERVICE}])=1</recovery_expression>
                                     <name>Service {#SERVICE} status</name>
                                     <priority>HIGH</priority>
                                 </trigger_prototype>
