@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <zabbix_export>
     <version>6.0</version>
-    <date>2022-08-31T20:27:07Z</date>
+    <date>2023-05-30T18:12:16Z</date>
     <groups>
         <group>
             <uuid>7df96b18c230490a9a0a9e2307226338</uuid>
@@ -34,7 +34,9 @@
                                 <trigger_prototype>
                                     <uuid>5019b56dfdab483ab7fc1b7ffd18403d</uuid>
                                     <expression>last(/MD RAID Array Monitor/MD.Query.State.[{#DEVICE}])=0</expression>
-                                    <name>MD RAID Array {#DEVICE} state</name>
+                                    <recovery_mode>RECOVERY_EXPRESSION</recovery_mode>
+                                    <recovery_expression>last(/MD RAID Array Monitor/MD.Query.State.[{#DEVICE}])=1</recovery_expression>
+                                    <name>MD RAID Array {#DEVICE} state error</name>
                                     <priority>HIGH</priority>
                                 </trigger_prototype>
                             </trigger_prototypes>
@@ -47,7 +49,9 @@
                                 <trigger_prototype>
                                     <uuid>3418bdf83c8141729a36731f794a8360</uuid>
                                     <expression>last(/MD RAID Array Monitor/MD.Query.Sync.[{#DEVICE}])=0</expression>
-                                    <name>MD RAID Array {#DEVICE} sync status</name>
+                                    <recovery_mode>RECOVERY_EXPRESSION</recovery_mode>
+                                    <recovery_expression>last(/MD RAID Array Monitor/MD.Query.Sync.[{#DEVICE}])=1</recovery_expression>
+                                    <name>MD RAID Array {#DEVICE} is resyncing</name>
                                     <priority>WARNING</priority>
                                 </trigger_prototype>
                             </trigger_prototypes>
