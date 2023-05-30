@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <zabbix_export>
     <version>6.0</version>
-    <date>2022-09-01T17:04:22Z</date>
+    <date>2023-05-30T18:20:58Z</date>
     <groups>
         <group>
             <uuid>a571c0d144b14fd4a87a9d9b2aa9fcd6</uuid>
@@ -42,18 +42,18 @@
                                 </trigger_prototype>
                                 <trigger_prototype>
                                     <uuid>ae8d1796ad514c78bf242784fd5fb1b7</uuid>
-                                    <expression>last(/SSL Certificate Checks/SSL.Certificate.Expire.[{#HOST},{#PORT},{#DOMAIN},{#TIMEOUT}])=1</expression>
+                                    <expression>last(/SSL Certificate Checks/SSL.Certificate.Expire.[{#HOST},{#PORT},{#DOMAIN},{#TIMEOUT}])&lt;=5 and last(/SSL Certificate Checks/SSL.Certificate.Expire.[{#HOST},{#PORT},{#DOMAIN},{#TIMEOUT}])&gt;0</expression>
                                     <recovery_mode>RECOVERY_EXPRESSION</recovery_mode>
-                                    <recovery_expression>last(/SSL Certificate Checks/SSL.Certificate.Expire.[{#HOST},{#PORT},{#DOMAIN},{#TIMEOUT}])&gt;1</recovery_expression>
-                                    <name>SSL Certificate for {#DOMAIN} on {#HOST}:{#PORT} expires in 1 day</name>
+                                    <recovery_expression>last(/SSL Certificate Checks/SSL.Certificate.Expire.[{#HOST},{#PORT},{#DOMAIN},{#TIMEOUT}])&gt;5</recovery_expression>
+                                    <name>SSL Certificate for {#DOMAIN} on {#HOST}:{#PORT} expires in {ITEM.LASTVALUE} days</name>
                                     <priority>HIGH</priority>
                                 </trigger_prototype>
                                 <trigger_prototype>
                                     <uuid>f22ab370c327413bbfd1afd1e2882ed1</uuid>
-                                    <expression>last(/SSL Certificate Checks/SSL.Certificate.Expire.[{#HOST},{#PORT},{#DOMAIN},{#TIMEOUT}])=5</expression>
+                                    <expression>last(/SSL Certificate Checks/SSL.Certificate.Expire.[{#HOST},{#PORT},{#DOMAIN},{#TIMEOUT}])&lt;=10 and last(/SSL Certificate Checks/SSL.Certificate.Expire.[{#HOST},{#PORT},{#DOMAIN},{#TIMEOUT}])&gt;0</expression>
                                     <recovery_mode>RECOVERY_EXPRESSION</recovery_mode>
-                                    <recovery_expression>last(/SSL Certificate Checks/SSL.Certificate.Expire.[{#HOST},{#PORT},{#DOMAIN},{#TIMEOUT}])&gt;5</recovery_expression>
-                                    <name>SSL Certificate for {#DOMAIN} on {#HOST}:{#PORT} expires in 5 days</name>
+                                    <recovery_expression>last(/SSL Certificate Checks/SSL.Certificate.Expire.[{#HOST},{#PORT},{#DOMAIN},{#TIMEOUT}])&gt;10</recovery_expression>
+                                    <name>SSL Certificate for {#DOMAIN} on {#HOST}:{#PORT} expires in {ITEM.LASTVALUE} days</name>
                                     <priority>AVERAGE</priority>
                                 </trigger_prototype>
                                 <trigger_prototype>

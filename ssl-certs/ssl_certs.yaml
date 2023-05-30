@@ -1,6 +1,6 @@
 zabbix_export:
   version: '6.0'
-  date: '2022-09-01T17:04:03Z'
+  date: '2023-05-30T18:20:53Z'
   groups:
     -
       uuid: a571c0d144b14fd4a87a9d9b2aa9fcd6
@@ -36,17 +36,17 @@ zabbix_export:
                   priority: DISASTER
                 -
                   uuid: ae8d1796ad514c78bf242784fd5fb1b7
-                  expression: 'last(/SSL Certificate Checks/SSL.Certificate.Expire.[{#HOST},{#PORT},{#DOMAIN},{#TIMEOUT}])=1'
+                  expression: 'last(/SSL Certificate Checks/SSL.Certificate.Expire.[{#HOST},{#PORT},{#DOMAIN},{#TIMEOUT}])<=5 and last(/SSL Certificate Checks/SSL.Certificate.Expire.[{#HOST},{#PORT},{#DOMAIN},{#TIMEOUT}])>0'
                   recovery_mode: RECOVERY_EXPRESSION
-                  recovery_expression: 'last(/SSL Certificate Checks/SSL.Certificate.Expire.[{#HOST},{#PORT},{#DOMAIN},{#TIMEOUT}])>1'
-                  name: 'SSL Certificate for {#DOMAIN} on {#HOST}:{#PORT} expires in 1 day'
+                  recovery_expression: 'last(/SSL Certificate Checks/SSL.Certificate.Expire.[{#HOST},{#PORT},{#DOMAIN},{#TIMEOUT}])>5'
+                  name: 'SSL Certificate for {#DOMAIN} on {#HOST}:{#PORT} expires in {ITEM.LASTVALUE} days'
                   priority: HIGH
                 -
                   uuid: f22ab370c327413bbfd1afd1e2882ed1
-                  expression: 'last(/SSL Certificate Checks/SSL.Certificate.Expire.[{#HOST},{#PORT},{#DOMAIN},{#TIMEOUT}])=5'
+                  expression: 'last(/SSL Certificate Checks/SSL.Certificate.Expire.[{#HOST},{#PORT},{#DOMAIN},{#TIMEOUT}])<=10 and last(/SSL Certificate Checks/SSL.Certificate.Expire.[{#HOST},{#PORT},{#DOMAIN},{#TIMEOUT}])>0'
                   recovery_mode: RECOVERY_EXPRESSION
-                  recovery_expression: 'last(/SSL Certificate Checks/SSL.Certificate.Expire.[{#HOST},{#PORT},{#DOMAIN},{#TIMEOUT}])>5'
-                  name: 'SSL Certificate for {#DOMAIN} on {#HOST}:{#PORT} expires in 5 days'
+                  recovery_expression: 'last(/SSL Certificate Checks/SSL.Certificate.Expire.[{#HOST},{#PORT},{#DOMAIN},{#TIMEOUT}])>10'
+                  name: 'SSL Certificate for {#DOMAIN} on {#HOST}:{#PORT} expires in {ITEM.LASTVALUE} days'
                   priority: AVERAGE
                 -
                   uuid: ec97b2938f784480b3c164cc268b49d3
